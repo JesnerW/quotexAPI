@@ -30,13 +30,32 @@ client.debug_ws_enable = False
 check_connect, message = client.connect()
 print(check_connect, message)
 if check_connect:
-    client.change_account("PRACTICE")
-    amount = 30
-    asset = "EURUSD_otc"  # "EURUSD_otc"
-    direction = "call"
-    duration = 10  # in seconds
-    status, buy_info = client.buy(amount, asset, direction, duration)
-    print(status, buy_info)
-    print("Saldo corrente: ", client.get_balance())
-    print("Saindo...")
-client.close()
+    # client.change_account("PRACTICE")
+    # amount = 1
+    # asset = "AUDCAD_otc"  # "EURUSD_otc"
+    # direction = "call"  # call or put minuscula
+    # duration = 10  # in seconds
+    # status, buy_info = client.buy(amount, asset, direction, duration)
+    # print(status, buy_info)
+    # print("Saldo corrente: ", client.get_balance())
+    # print("Saindo...")
+    monto = 1
+    for _ in range(3):
+        client.change_account(
+            "PRACTICE")  # PRACTICE - REAL
+        asset = "AUDCAD_otc"  # "EURUSD_otc"
+        amount = monto
+        direction = "call"  # call or put miniscula
+        duration = 10  # in seconds
+        buy_info = client.buy(
+            amount, asset, direction, duration)
+        idOperation = buy_info[1]["id"]
+        stado_compra = client.check_win(idOperation)
+
+        if stado_compra:  # Si ganó, salir del bucle
+            print("Saldo actual: ", client.get_balance())
+            client.close()
+            break
+        else:  # Si perdió, duplicar el monto de la apuesta
+            stado_compra = None
+            monto *= 2
